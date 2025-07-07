@@ -8,7 +8,6 @@
 		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.appointments-service</groupId>
 	<artifactId>appointment-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>appointment-service</name>

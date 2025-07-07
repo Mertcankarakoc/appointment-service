@@ -1,4 +1,4 @@
-package com.appointments_service.appointment_service;
+package appointment_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.appointments_service.notification_service;
+package notification_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

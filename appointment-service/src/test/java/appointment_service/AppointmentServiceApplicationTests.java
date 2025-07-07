@@ -1,4 +1,4 @@
-package com.appointments_service.appointment_service;
+package appointment_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.appointments_service.notification_service;
+package notification_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
