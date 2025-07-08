@@ -5,7 +5,7 @@ public class ResponseMessageProperties {
     public static String MESSAGE_002 = "No users found";
     public static String MESSAGE_003 = "No create user request found";
     public static String MESSAGE_004 = "User created successfully";
-    public static String MESSAGE_005 = "Category name cannot be null";
+    public static String MESSAGE_005 = "Email already exists";
     public static String MESSAGE_006 = "No product found for the given category";
     public static String MESSAGE_007 = "An error occurred while fetching product by category";
     public static String MESSAGE_008 = "Brand name cannot be null";

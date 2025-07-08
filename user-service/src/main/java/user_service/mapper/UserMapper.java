@@ -9,8 +9,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
     @Mapping(target = "id", ignore = true)
     User toUser(UserDto userDto);
 
     List<UserDto> toUserDtoList(List<User> users);
+
+    UserDto toUserDto(User user);
 }
