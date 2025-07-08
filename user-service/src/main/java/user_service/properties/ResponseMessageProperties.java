@@ -1,17 +1,15 @@
 package user_service.properties;
 
 public class ResponseMessageProperties {
-    public static String MESSAGE_001 = "Users retrieved successfully";
-    public static String MESSAGE_002 = "No users found";
-    public static String MESSAGE_003 = "No create user request found";
-    public static String MESSAGE_004 = "User created successfully";
-    public static String MESSAGE_005 = "Email already exists";
-    public static String MESSAGE_006 = "No product found for the given category";
-    public static String MESSAGE_007 = "An error occurred while fetching product by category";
-    public static String MESSAGE_008 = "Brand name cannot be null";
-    public static String MESSAGE_009 = "Category name and brand name cannot be null";
-    public static String MESSAGE_010 = "productDto cannot be null";
-    public static String MESSAGE_011 = "Category not found";
-    public static String MESSAGE_012 = "Product created successfully";
-    public static String MESSAGE_013 = "An error occurred while creating product";
+    public static final String MSG_USER_CREATED = "User created successfully";
+    public static final String MSG_USER_ALREADY_EXISTS = "A user with this email already exists";
+    public static final String MSG_TCKN_ALREADY_EXISTS = "A user with this TCKN already exists";
+    public static final String MSG_USER_NOT_FOUND = "User not found";
+    public static final String MSG_USERS_NOT_FOUND = "No users found";
+    public static final String MSG_USER_UPDATED = "User updated successfully";
+    public static final String MSG_REQUEST_BODY_NULL = "Request body cannot be null";
+    public static final String MSG_TCKN_CANNOT_BE_CHANGED = "TCKN cannot be changed";
+    public static final String MSG_EMAIL_ALREADY_EXISTS = "Email already exists";
+    public static final String USERS_RETRIEVED_SUCCESSFULLY = "Users retrieved successfully";
+
 }
