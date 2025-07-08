@@ -12,6 +12,6 @@ import user_service.dto.UserDto;
 @AllArgsConstructor
 @SuperBuilder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CreateUserRequest {
+public class UpdateUserReq {
     UserDto user;
-}
+} 

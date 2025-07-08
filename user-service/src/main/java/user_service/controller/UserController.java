@@ -2,9 +2,11 @@ package user_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import user_service.request.CreateUserRequest;
+import user_service.request.CreateUserReq;
+import user_service.request.UpdateUserReq;
 import user_service.response.CreateUserRes;
 import user_service.response.GetUsersRes;
+import user_service.response.UpdateUserRes;
 import user_service.service.UserService;
 
 @RestController
@@ -14,8 +16,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public CreateUserRes createUserRes(@RequestBody CreateUserRequest createUserRequest) {
-        return userService.createUser(createUserRequest);
+    public CreateUserRes createUserRes(@RequestBody CreateUserReq createUserReq) {
+        return userService.createUser(createUserReq);
     }
 
     @GetMapping("/allUsers")
@@ -41,6 +43,11 @@ public class UserController {
     @GetMapping("/{name}/{surname}")
     public GetUsersRes getUserByNameAndSurname(@PathVariable String name,@PathVariable String surname) {
         return userService.getUserByNameAndSurname(name, surname);
+    }
+
+    @PutMapping("/update/{id}")
+    public UpdateUserRes updateUser(@PathVariable Long id, @RequestBody UpdateUserReq updateUserReq) {
+        return userService.updateUser(id, updateUserReq);
     }
 
 }

@@ -1,6 +1,5 @@
 package user_service.service;
 
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,9 +11,11 @@ import user_service.model.User;
 import user_service.properties.ResponseMessageProperties;
 import user_service.properties.ResponseStatusProperties;
 import user_service.repository.UserRepository;
-import user_service.request.CreateUserRequest;
+import user_service.request.CreateUserReq;
+import user_service.request.UpdateUserReq;
 import user_service.response.CreateUserRes;
 import user_service.response.GetUsersRes;
+import user_service.response.UpdateUserRes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,18 +28,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public CreateUserRes createUser(CreateUserRequest createUserRequest) {
-        log.trace("Create user with request: {}", createUserRequest);
+    public CreateUserRes createUser(CreateUserReq createUserReq) {
+        log.trace("Create user with request: {}", createUserReq);
 
-        if (createUserRequest == null || createUserRequest.getUser() == null) {
+        if (createUserReq == null || createUserReq.getUser() == null) {
             throw new NotOkResponseException(HttpStatus.BAD_REQUEST, ResponseMessageProperties.MESSAGE_003, 400, null);
         }
 
-        UserDto userDto = createUserRequest.getUser();
+        UserDto userDto = createUserReq.getUser();
+        
         List<User> users = userRepository.findAllByEmail(userDto.getEmail());
-
         if (!users.isEmpty()) {
             throw new NotOkResponseException(HttpStatus.BAD_REQUEST, ResponseMessageProperties.MESSAGE_005, 400, null);
+        }
+
+        Optional<User> existingUserByTckn = userRepository.findByTckn(userDto.getTckn());
+        if (existingUserByTckn.isPresent()) {
+            throw new NotOkResponseException(HttpStatus.BAD_REQUEST, "Bu TCKN ile kayıtlı kullanıcı bulunmaktadır", 400, null);
         }
 
         User user = userMapper.toUser(userDto);
@@ -135,6 +141,45 @@ public class UserService {
         return GetUsersRes.builder()
                 .data(userDto)
                 .message(ResponseMessageProperties.MESSAGE_001)
+                .status(ResponseStatusProperties.SUCCESS)
+                .statusCode(200)
+                .build();
+    }
+
+    public UpdateUserRes updateUser(Long userId, UpdateUserReq updateUserReq) {
+        log.trace("Update user with id: {} and request: {}", userId, updateUserReq);
+
+        if (updateUserReq == null || updateUserReq.getUser() == null) {
+            throw new NotOkResponseException(HttpStatus.BAD_REQUEST, "Request body cannot be null", 400, null);
+        }
+
+        Optional<User> existingUser = userRepository.findById(userId);
+        if (existingUser.isEmpty()) {
+            throw new NotOkResponseException(HttpStatus.NOT_FOUND, "User not found", 404, null);
+        }
+
+        UserDto userDto = updateUserReq.getUser();
+        User user = existingUser.get();
+
+        if (userDto.getTckn() != null && !userDto.getTckn().equals(user.getTckn())) {
+            throw new NotOkResponseException(HttpStatus.BAD_REQUEST, "TCKN değiştirilemez", 400, null);
+        }
+
+        if (userDto.getEmail() != null && !userDto.getEmail().equals(user.getEmail())) {
+            List<User> usersWithEmail = userRepository.findAllByEmail(userDto.getEmail());
+            boolean emailUsedByAnother = usersWithEmail.stream().anyMatch(u -> !u.getId().equals(user.getId()));
+            if (emailUsedByAnother) {
+                throw new NotOkResponseException(HttpStatus.BAD_REQUEST, "Email already exists", 400, null);
+            }
+        }
+
+        userMapper.updateUserFromDto(user, userDto);
+        
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        return UpdateUserRes.builder()
+                .message("User updated successfully")
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
                 .build();
