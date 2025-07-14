@@ -3,18 +3,22 @@ package user_service.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import user_service.dto.UserDto;
 import user_service.exception.NotOkResponseException;
 import user_service.mapper.UserMapper;
+import user_service.model.Role;
 import user_service.model.User;
 import user_service.properties.ResponseMessageProperties;
 import user_service.properties.ResponseStatusProperties;
 import user_service.repository.UserRepository;
 import user_service.request.CreateUserReq;
+import user_service.request.RegisterReq;
 import user_service.request.UpdateUserReq;
 import user_service.response.CreateUserRes;
 import user_service.response.GetUsersRes;
+import user_service.response.RegisterRes;
 import user_service.response.UpdateUserRes;
 
 import java.time.LocalDateTime;
@@ -27,6 +31,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateUserRes createUser(CreateUserReq createUserReq) {
         log.trace("Create user with request: {}", createUserReq);
@@ -182,5 +187,15 @@ public class UserService {
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
                 .build();
+    }
+
+    public void deleteUser(Long userId) {
+        log.trace("Delete user with id: {}", userId);
+
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USER_NOT_FOUND, 404, null);
+        }
+
+        userRepository.deleteById(userId);
     }
 }

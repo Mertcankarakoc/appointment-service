@@ -25,3 +25,8 @@ spring:
 
 app:
   base-url: http://localhost:8080
+
+
+jwt:
+  secret: MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHHPx1pq5PcFjQiHlV6PbXh6RhzuV8ZA2gnOJyZRrOEX1wbwPFB/bugc5R01T4nszQpUDWrM2BzDc7VuMWMYF2ypDQkwmUAN/Zu7j2ahhdJJj2uV7SzOrs9F0J8N6P2XLqHbbDf5MeugbwxWyH9SyObbsYG5BjiWyBOhiSOmhCjVAgMBAAE=
+  expiration: 3600000

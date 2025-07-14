@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import user_service.request.CreateUserReq;
 import user_service.request.UpdateUserReq;
+import user_service.request.RegisterReq;
 import user_service.response.CreateUserRes;
 import user_service.response.GetUsersRes;
 import user_service.response.UpdateUserRes;
+import user_service.response.RegisterRes;
 import user_service.service.UserService;
 
 @RestController
@@ -50,4 +52,8 @@ public class UserController {
         return userService.updateUser(id, updateUserReq);
     }
 
+    @DeleteMapping("{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+    }
 }
