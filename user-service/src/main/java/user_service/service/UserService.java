@@ -8,17 +8,14 @@ import org.springframework.stereotype.Service;
 import user_service.dto.UserDto;
 import user_service.exception.NotOkResponseException;
 import user_service.mapper.UserMapper;
-import user_service.model.Role;
 import user_service.model.User;
 import user_service.properties.ResponseMessageProperties;
 import user_service.properties.ResponseStatusProperties;
 import user_service.repository.UserRepository;
 import user_service.request.CreateUserReq;
-import user_service.request.RegisterReq;
 import user_service.request.UpdateUserReq;
 import user_service.response.CreateUserRes;
 import user_service.response.GetUsersRes;
-import user_service.response.RegisterRes;
 import user_service.response.UpdateUserRes;
 
 import java.time.LocalDateTime;
@@ -72,9 +69,8 @@ public class UserService {
             throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USERS_NOT_FOUND, 404, null);
         }
 
-        List<UserDto> userDtoList = userMapper.toUserDtoList(users);
         return GetUsersRes.builder()
-                .data(userDtoList)
+                .data(users)
                 .message(ResponseMessageProperties.USERS_RETRIEVED_SUCCESSFULLY)
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
@@ -90,9 +86,8 @@ public class UserService {
             throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USER_NOT_FOUND, 404, null);
         }
 
-        UserDto userDto = userMapper.toUserDto(user.get());
         return GetUsersRes.builder()
-                .data(userDto)
+                .data(user)
                 .message(ResponseMessageProperties.USERS_RETRIEVED_SUCCESSFULLY)
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
@@ -102,14 +97,13 @@ public class UserService {
     public GetUsersRes getUserByName(String name) {
         log.trace("Get user by name {}", name);
 
-        List<User> users = userRepository.findByName(name);
+        List<User> users = userRepository.findByNameContainingIgnoreCase(name);
         if (users.isEmpty()) {
             throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USERS_NOT_FOUND, 404, null);
         }
 
-        List<UserDto> userDto = userMapper.toUserDtoList(users);
         return GetUsersRes.builder()
-                .data(userDto)
+                .data(users)
                 .message(ResponseMessageProperties.USERS_RETRIEVED_SUCCESSFULLY)
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
@@ -119,14 +113,13 @@ public class UserService {
     public GetUsersRes getUserBySurname(String surname) {
         log.trace("Get user by surname {}", surname);
 
-        List<User> users = userRepository.findBySurname(surname);
+        List<User> users = userRepository.findBySurnameContainingIgnoreCase(surname);
         if (users.isEmpty()) {
             throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USERS_NOT_FOUND, 404, null);
         }
 
-        List<UserDto> userDto = userMapper.toUserDtoList(users);
         return GetUsersRes.builder()
-                .data(userDto)
+                .data(users)
                 .message(ResponseMessageProperties.USERS_RETRIEVED_SUCCESSFULLY)
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
@@ -136,14 +129,13 @@ public class UserService {
     public GetUsersRes getUserByNameAndSurname(String name, String surname) {
         log.trace("Get user by name and surname {}", surname);
 
-        List<User> users = userRepository.findByNameAndSurname(name, surname);
+        List<User> users = userRepository.findByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(name, surname);
         if (users.isEmpty()) {
             throw new NotOkResponseException(HttpStatus.NOT_FOUND, ResponseMessageProperties.MSG_USERS_NOT_FOUND, 404, null);
         }
 
-        List<UserDto> userDto = userMapper.toUserDtoList(users);
         return GetUsersRes.builder()
-                .data(userDto)
+                .data(users)
                 .message(ResponseMessageProperties.USERS_RETRIEVED_SUCCESSFULLY)
                 .status(ResponseStatusProperties.SUCCESS)
                 .statusCode(200)
@@ -166,7 +158,10 @@ public class UserService {
         User user = existingUser.get();
 
         if (userDto.getTckn() != null && !userDto.getTckn().equals(user.getTckn())) {
-            throw new NotOkResponseException(HttpStatus.BAD_REQUEST, ResponseMessageProperties.MSG_TCKN_CANNOT_BE_CHANGED, 400, null);
+            Optional<User> existingUserByTckn = userRepository.findByTckn(userDto.getTckn());
+            if (existingUserByTckn.isPresent()) {
+                throw new NotOkResponseException(HttpStatus.BAD_REQUEST, ResponseMessageProperties.MSG_TCKN_ALREADY_EXISTS, 400, null);
+            }
         }
 
         if (userDto.getEmail() != null && !userDto.getEmail().equals(user.getEmail())) {

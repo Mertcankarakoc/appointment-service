@@ -28,5 +28,4 @@ public class UserDto {
     String address;
     BloodType bloodType;
     Role role;
-    Boolean isActive;
 }

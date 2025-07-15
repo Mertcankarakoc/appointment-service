@@ -25,14 +25,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true, nullable = false)
     @Pattern(regexp = "^[1-9][0-9]{10}$", message = "TCKN must be 11 digits and cannot start with 0")
     String tckn;
 
-    @Column(nullable = false)
     String name;
 
-    @Column(nullable = false)
     String surname;
 
     @Column(unique = true, nullable = false)
@@ -48,28 +45,18 @@ public class User {
 
     LocalDate birthDate;
 
-    @Enumerated(EnumType.STRING)
-    Gender gender;
-
     String address;
 
     @Enumerated(EnumType.STRING)
     BloodType bloodType;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    Gender gender;
+
+    @Enumerated(EnumType.STRING)
     Role role;
 
-    @Column(nullable = false)
-    Boolean isActive = true;
-
-    @Column(nullable = false)
-    Boolean emailVerified = false;
-
-    @Column(nullable = false, updatable = false)
     LocalDateTime createdAt;
-
-    @Column(nullable = false)
     LocalDateTime updatedAt;
 
     @PrePersist

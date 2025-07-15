@@ -41,11 +41,13 @@ public interface UserMapper {
         if (userDto.getBloodType() != null) {
             user.setBloodType(userDto.getBloodType());
         }
+
+        if (userDto.getTckn() != null) {
+            user.setTckn(userDto.getTckn());
+        }
+
         if (userDto.getRole() != null) {
             user.setRole(userDto.getRole());
-        }
-        if (userDto.getIsActive() != null) {
-            user.setIsActive(userDto.getIsActive());
         }
     }
 }
